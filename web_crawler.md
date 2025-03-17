@@ -212,6 +212,67 @@ def save_to_custom_database(self, urls: List[str]) -> None:
         logger.info(f"Saved URL to custom database: {url}")
 ```
 
+## Scheduled Execution
+
+The crawler can be scheduled to run automatically using cron jobs on Unix-based systems (Linux, macOS).
+
+### Setting Up a Cron Job
+
+1. Open your crontab file for editing:
+   ```bash
+   crontab -e
+   ```
+
+2. Add an entry to run the script at your desired schedule. For example, to run the script every hour at minute 30:
+   ```bash
+   # Run web_crawler.py at minute 30 of every hour
+   30 * * * * cd /path/to/lji_trafficking_news && PYTHONPATH=/path/to/lji_trafficking_news /path/to/.venv/bin/python /path/to/web_crawler.py >> /path/to/logs/logfile.log 2>&1
+   ```
+
+3. Save and exit the editor.
+
+### Crontab Format Explanation
+
+The crontab entry follows this format:
+```
+minute hour day_of_month month day_of_week command
+```
+
+- **minute**: (0-59)
+- **hour**: (0-23)
+- **day_of_month**: (1-31)
+- **month**: (1-12)
+- **day_of_week**: (0-6, where 0 is Sunday)
+
+### Common Schedule Examples
+
+| Schedule | Crontab Entry | Description |
+|----------|---------------|-------------|
+| Every hour | `0 * * * *` | Runs at the beginning of every hour |
+| Twice daily | `0 */12 * * *` | Runs every 12 hours (at midnight and noon) |
+| Once daily | `0 0 * * *` | Runs at midnight every day |
+| Weekly | `0 0 * * 0` | Runs at midnight every Sunday |
+
+### Important Notes
+
+- Ensure that all paths in the crontab entry are absolute paths
+- The `PYTHONPATH` variable ensures that the script can access project modules
+- The `>>` operator appends output to the log file
+- The `2>&1` redirects error output to the same log file
+- Adjust file permissions if necessary: `chmod +x /path/to/web_crawler.py`
+
+### Troubleshooting
+
+If your cron job isn't running as expected:
+
+1. Check the system logs for cron-related errors:
+   ```bash
+   grep CRON /var/log/syslog
+   ```
+
+2. Ensure the script runs successfully when executed manually
+3. Verify that all paths in the crontab entry are correct
+4. Make sure the log directory exists and is writable
 ## Contributing
 
 We welcome contributions to improve this tool. Please follow these steps:
